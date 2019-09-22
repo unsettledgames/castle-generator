@@ -17,4 +17,8 @@
  * There are elements that could not respect this format: towers, arcs, statues etc, they must be managed in a different way.
  * Each time such an element is added, it is important to add a proper implementation of it in the algorithm.
  * 
+ * 
+ * TODO:
+ * - See which tiles go well together: try experimenting and instantiate all the possible connections to see whether it looks
+ *   good or not
  */ 
