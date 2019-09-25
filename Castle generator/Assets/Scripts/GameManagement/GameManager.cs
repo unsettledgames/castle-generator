@@ -16,8 +16,12 @@ public class GameManager : MonoBehaviour
 
     [Header("Tilesets labels")]
     public Tileset cliffTileSet;
+    public Tileset[] bridgeTilesets;
 
     public GameObject generationParent;
+
+    // The tileset I'm currently using
+    private Tileset currentTileset;
 
     public void CheckData()
     {
@@ -81,16 +85,26 @@ public class GameManager : MonoBehaviour
         int cliffHeight = UnityEngine.Random.Range(minCliffHeight, maxCliffHeight);
         int cliffWidth = UnityEngine.Random.Range(minCliffWidth, maxCliffWidth);
         Vector3 nextPosition = Camera.main.transform.position;
+        bool mustBuildBridge;
 
         for (int i=0; i<nCliffs; i++)
         {
-            nextPosition = GenerateCliff(nextPosition, cliffHeight, cliffWidth).bridgePositions[0];
+            if (i != nCliffs - 1)
+            {
+                mustBuildBridge = true;
+            }
+            else
+            {
+                mustBuildBridge = false;
+            }
+
+            nextPosition = GenerateCliff(nextPosition, cliffHeight, cliffWidth, mustBuildBridge).bridgePositions[0];
         }
     }
 
     
 
-    private PossibleContactPoints GenerateCliff(Vector3 start, int height, int width)
+    private PossibleContactPoints GenerateCliff(Vector3 start, int height, int width, bool mustBuildBridge)
     {
         PossibleContactPoints ret = new PossibleContactPoints();
 
@@ -109,22 +123,32 @@ public class GameManager : MonoBehaviour
         {
             for (int y=yStart; y<yEnd; y++)
             {
-                string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
-                string tile = possibleTiles[0];
+                currentTileset = cliffTileSet;
 
-
-                if (possibleTiles.Length != 1)
+                // If I have to build a bridge and I can do it
+                if (mustBuildBridge && (x == (xEnd - 1)))
                 {
-                    int index = UnityEngine.Random.Range(0, possibleTiles.Length);
-
-                    Debug.Log(index);
-                    tile = possibleTiles[index];
+                    
                 }
+                else
+                {
+                    string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
+                    string tile = possibleTiles[0];
 
-                Debug.Log(tile);
 
-                GameObject instantiated = Instantiate((GameObject)Resources.Load(tile), intStartPos + new Vector2(x, y), Quaternion.Euler(Vector2.zero));
-                instantiated.transform.parent = generationParent.transform;
+                    if (possibleTiles.Length != 1)
+                    {
+                        int index = UnityEngine.Random.Range(0, possibleTiles.Length);
+
+                        Debug.Log(index);
+                        tile = possibleTiles[index];
+                    }
+
+                    Debug.Log(tile);
+
+                    GameObject instantiated = Instantiate((GameObject)Resources.Load(tile), intStartPos + new Vector2(x, y), Quaternion.Euler(Vector2.zero));
+                    instantiated.transform.parent = generationParent.transform;
+                }
             }
         }
 
@@ -148,17 +172,17 @@ public class GameManager : MonoBehaviour
             // Bottom left tile
             if (y == yStart)
             {
-                return cliffTileSet.GetBottomLeft();
+                return currentTileset.GetBottomLeft();
             }
             // Top left tile
             else if (y == (yEnd - 1))
             {
-                return cliffTileSet.GetTopLeft();
+                return currentTileset.GetTopLeft();
             }
             // Middle left tile
             else
             {
-                return cliffTileSet.GetMiddleLeft();
+                return currentTileset.GetMiddleLeft();
             }
         }
         // Right tiles
@@ -167,16 +191,16 @@ public class GameManager : MonoBehaviour
             // Bottom right tile
             if (y == yStart)
             {
-                return cliffTileSet.GetBottomRight();
+                return currentTileset.GetBottomRight();
             }
             // Top right tile
             else if (y == (yEnd - 1))
             {
-                return cliffTileSet.GetTopRight();
+                return currentTileset.GetTopRight();
             }
             else
             {
-                return cliffTileSet.GetMiddleRight();
+                return currentTileset.GetMiddleRight();
             }
         }
         // Middle tiles
@@ -185,17 +209,17 @@ public class GameManager : MonoBehaviour
             // Bottom middle tile
             if (y == yStart)
             {
-                return cliffTileSet.GetBottomMiddle();
+                return currentTileset.GetBottomMiddle();
             }
             // Top middle tile
             else if (y == (yEnd - 1))
             {
-                return cliffTileSet.GetTopMiddle();
+                return currentTileset.GetTopMiddle();
             }
             // Middle middle tile
             else
             {
-                return cliffTileSet.GetMiddleMiddle();
+                return currentTileset.GetMiddleMiddle();
             }
         }
     }
