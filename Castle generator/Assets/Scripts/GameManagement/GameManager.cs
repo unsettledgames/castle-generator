@@ -12,6 +12,11 @@ public class GameManager : MonoBehaviour
     public int maxCliffHeight;
     public int minCliffWidth;
     public int maxCliffWidth;
+
+    [Header("Bridges data")]
+    public int minBridgeWidth;
+    public int maxBridgeWidth;
+
     public int nCliffs;
 
     [Header("Tilesets labels")]
@@ -32,47 +37,48 @@ public class GameManager : MonoBehaviour
         }
 
         // Getting string values from input fields
+        // Cliffs
         string minCh = GameObject.FindGameObjectWithTag("MinCliffHeight").GetComponent<InputField>().text;
         string maxCh = GameObject.FindGameObjectWithTag("MaxCliffHeight").GetComponent<InputField>().text;
         string minCw = GameObject.FindGameObjectWithTag("MinCliffWidth").GetComponent<InputField>().text;
         string maxCw = GameObject.FindGameObjectWithTag("MaxCliffWidth").GetComponent<InputField>().text;
 
+        // Bridges
+        string minBw = GameObject.FindGameObjectWithTag("MinBridgeWidth").GetComponent<InputField>().text;
+        string maxBw = GameObject.FindGameObjectWithTag("MaxBridgeWidth").GetComponent<InputField>().text;
+
         // Checking if they're correct
-        if (!minCh.Equals("") && !maxCh.Equals("") && !minCw.Equals("") && !maxCw.Equals(""))
+        try
         {
+            minCliffHeight = int.Parse(minCh);
+            maxCliffHeight = int.Parse(maxCh);
+            minCliffWidth = int.Parse(minCw);
+            maxCliffWidth = int.Parse(maxCw);
+
+            minBridgeWidth = int.Parse(minBw);
+            maxBridgeWidth = int.Parse(maxBw);
+
             try
             {
-                minCliffHeight = int.Parse(minCh);
-                maxCliffHeight = int.Parse(maxCh);
-                minCliffWidth = int.Parse(minCw);
-                maxCliffWidth = int.Parse(maxCw);
-
-                try
-                {
-                    nCliffs = (int)GameObject.FindGameObjectWithTag("NCliffs").GetComponent<Slider>().value;
-                }
-                catch(NullReferenceException e)
-                {
-                    return;
-                }
-                
-
-                Debug.Log(minCliffHeight + "," + maxCliffHeight);
-                Debug.Log(minCliffWidth + "," + maxCliffWidth);
-
-                if (minCliffHeight > maxCliffHeight || minCliffWidth > maxCliffWidth)
-                {
-                    // TODO: log error
-                    Debug.Log("Check ur math");
-                    return;
-                }
+                nCliffs = (int)GameObject.FindGameObjectWithTag("NCliffs").GetComponent<Slider>().value;
             }
-            catch (Exception e)
+            catch(NullReferenceException e)
             {
-                // TODO: log error
-                Debug.Log("Dafuq");
                 return;
             }
+                
+            if (minCliffHeight > maxCliffHeight || minCliffWidth > maxCliffWidth)
+            {
+                // TODO: log error
+                Debug.Log("Check ur math");
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            // TODO: log error
+            Debug.Log("Dafuq");
+            return;
         }
 
         Debug.Log("Aight correct input");
@@ -84,11 +90,12 @@ public class GameManager : MonoBehaviour
     {
         int cliffHeight = UnityEngine.Random.Range(minCliffHeight, maxCliffHeight);
         int cliffWidth = UnityEngine.Random.Range(minCliffWidth, maxCliffWidth);
-        Vector3 nextPosition = Camera.main.transform.position;
+        Vector3 nextPosition = new Vector3(-43.1875f, -9.875f, -10);
         bool mustBuildBridge;
 
         for (int i=0; i<nCliffs; i++)
         {
+            /*
             if (i != nCliffs - 1)
             {
                 mustBuildBridge = true;
@@ -97,8 +104,11 @@ public class GameManager : MonoBehaviour
             {
                 mustBuildBridge = false;
             }
+            */
+            mustBuildBridge = true;
 
-            nextPosition = GenerateCliff(nextPosition, cliffHeight, cliffWidth, mustBuildBridge).bridgePositions[0];
+            GenerateCliff(nextPosition, cliffHeight, cliffWidth, mustBuildBridge);
+            nextPosition = new Vector3(-43.1875f, -9.875f, -10);
         }
     }
 
@@ -123,12 +133,57 @@ public class GameManager : MonoBehaviour
         {
             for (int y=yStart; y<yEnd; y++)
             {
+                // Instantiated tile
+                GameObject instantiated;
+                // Using the default tileset
                 currentTileset = cliffTileSet;
 
-                // If I have to build a bridge and I can do it
-                if (mustBuildBridge && (x == (xEnd - 1)))
+                // If I have to build a bridge and I'm in the bottom right corner, I build a bridge
+                if (mustBuildBridge && (x == (xEnd - 1)) && y == yStart)
                 {
-                    
+                    // Calculating bridge width
+                    int bridgeWidth = UnityEngine.Random.Range(minBridgeWidth, maxBridgeWidth);
+                    // Calculating start and end points
+                    int bridgeStartX = x;
+                    int bridgeEndX = x + bridgeWidth;
+                    int bridgeStartY = yStart;
+                    int bridgeEndY = yEnd;
+
+                    // Choosing a random bridge tileset
+                    currentTileset = bridgeTilesets[UnityEngine.Random.Range(0, bridgeTilesets.Length)];
+
+                    // Building the bridge
+                    for (int xBridge=x; xBridge < (x + bridgeWidth); xBridge++)
+                    {
+                        for (int yBridge=yStart; yBridge < yEnd; yBridge++)
+                        {
+                            // Position used to instantiate the tile
+                            Vector2 instantiationPos = intStartPos + new Vector2(x, y) + new Vector2(xBridge, yBridge);
+                            string[] possibleTiles = GetPossibleTiles(
+                                bridgeStartX, bridgeEndX, bridgeStartY, bridgeEndY, xBridge, yBridge
+                            );
+
+                            Debug.Log(possibleTiles[0]);
+                            // Instantiating the tile
+                            instantiated = Instantiate(
+                                (GameObject)Resources.Load(possibleTiles[0]),
+                                instantiationPos,
+                                Quaternion.Euler(Vector3.zero)
+                                );
+
+                            // If I have alternatives, that means I have to add the top part of the bridge
+                            if (possibleTiles.Length > 1)
+                            {
+                                GameObject tmp = Instantiate(
+                                    (GameObject)Resources.Load(possibleTiles[1]),
+                                    instantiationPos,
+                                    Quaternion.Euler(Vector3.zero)
+                                    );
+
+                                tmp.transform.parent = generationParent.transform;
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -146,7 +201,7 @@ public class GameManager : MonoBehaviour
 
                     Debug.Log(tile);
 
-                    GameObject instantiated = Instantiate((GameObject)Resources.Load(tile), intStartPos + new Vector2(x, y), Quaternion.Euler(Vector2.zero));
+                    instantiated = Instantiate((GameObject)Resources.Load(tile), intStartPos + new Vector2(x, y), Quaternion.Euler(Vector2.zero));
                     instantiated.transform.parent = generationParent.transform;
                 }
             }
