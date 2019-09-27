@@ -1836,6 +1836,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   smoothFactor: 5
+  speed: 2
   minX: 0
   maxX: 0
   minY: 0

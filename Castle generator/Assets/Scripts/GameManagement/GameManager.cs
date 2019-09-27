@@ -103,8 +103,6 @@ public class GameManager : MonoBehaviour
                     (startData.prevHeight == 0) ? 3 : startData.prevHeight, 
                     (startData.prevHeight == 0) ? 3 : maxCliffHeight);
                 cliffWidth = UnityEngine.Random.Range(minCliffWidth, maxCliffWidth);
-
-                Debug.Log("Altezza: " + cliffHeight + ", precedente: " + startData.prevHeight);
             }
             else
             {
@@ -236,8 +234,8 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    if (((x == xStart) && data.mustDrawLeft) || (x != xStart) || (data.prevHeight <= (y - yStart)) ||
-                        (data.bridgeType.Contains("Little") && (x == (xEnd - 1)) && (y == (yEnd - 1))))
+                    if (((x == xStart) && data.mustDrawLeft) || (x != xStart) || (data.prevHeight <= height) /*||
+                        (data.bridgeType.Contains("Little") && (x == xStart) && (y == (yEnd - 1)))*/)
                     {
                         string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
                         string tile = possibleTiles[0];
