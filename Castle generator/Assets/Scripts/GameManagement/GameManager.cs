@@ -99,11 +99,19 @@ public class GameManager : MonoBehaviour
         {
             if (startData.CanChangeHeight())
             {
-                cliffHeight = UnityEngine.Random.Range(startData.prevHeight == 0 ? minCliffHeight : startData.prevHeight, maxCliffHeight);
+                cliffHeight = UnityEngine.Random.Range(
+                    (startData.prevHeight == 0) ? 3 : startData.prevHeight, 
+                    (startData.prevHeight == 0) ? 3 : maxCliffHeight);
                 cliffWidth = UnityEngine.Random.Range(minCliffWidth, maxCliffWidth);
+
+                Debug.Log("Altezza: " + cliffHeight + ", precedente: " + startData.prevHeight);
+            }
+            else
+            {
+                cliffHeight = startData.prevHeight;
             }
             
-            if (i != nCliffs - 1)
+            if (i != (nCliffs - 1))
             {
                 mustBuildBridge = true;
             }
@@ -112,14 +120,15 @@ public class GameManager : MonoBehaviour
                 mustBuildBridge = false;
             }
 
+            Debug.Log("Altezza di prima: " + startData.prevHeight);
             startData = GenerateCliff(startData, cliffHeight, cliffWidth, mustBuildBridge);
         }
     }
 
     private CliffGenerationData GenerateCliff(CliffGenerationData data, int height, int width, bool mustBuildBridge)
     {
+        Debug.Log("Dimensione: " + data.bridgePositions.Count);
         Vector3 start = data.bridgePositions[0];
-        Debug.Log("Start position: " + start);
         CliffGenerationData ret = new CliffGenerationData();
 
         // Converting start position to int
@@ -127,8 +136,6 @@ public class GameManager : MonoBehaviour
         int yStart = (int)start.y;
         // Crating an int start position
         Vector2 intStartPos = new Vector2(xStart, yStart);
-
-        Debug.Log("IntStart: " + intStartPos);
 
         // Calculating end position
         int xEnd = xStart + width;
@@ -161,9 +168,9 @@ public class GameManager : MonoBehaviour
                     prefix = currentTileset.prefix;
 
                     // If I didn't pick a big bridge, I can make it shorter than the cliff
-                    if (!((prefix.Contains("/LightBridge/")) || prefix.Contains("/DarkBridge/")))
+                    if (!((prefix.Contains("/LightBridge/")) || prefix.Contains("/DarkBridge/") || prefix.Contains("Brown")))
                     {
-                        bridgeEndY = UnityEngine.Random.Range(bridgeStartY, yEnd);
+                        bridgeEndY = UnityEngine.Random.Range(bridgeStartY + 3, yEnd);
                     }
 
                     /* Used for those bridges that have 2 top tiles (one above the other one). Since they're added
@@ -187,21 +194,18 @@ public class GameManager : MonoBehaviour
                                     bridgeStartX, bridgeEndX, bridgeStartY, bridgeEndY, xBridge, yBridge
                                 );
 
-                                Debug.Log(possibleTiles[0]);
-
                                 /* The bottom right corner of the bridge is the position of the next 
                                  * cliff, so I add it to the bridgePositions list */
                                 if (possibleTiles[0].Contains("BottomRight"))
                                 {
                                     Vector2 toAdd = new Vector2(instantiationPos.x, instantiationPos.y);
-                                    Debug.Log("Next position: " + toAdd);
                                     ret.bridgePositions.Add(toAdd);
                                     // Also, since the bridge contains part of the cliff, I don't need to draw that part
                                     ret.mustDrawLeft = false;
                                     // Saving bridge type
                                     ret.bridgeType = currentTileset.prefix;
                                     // Adding current Y
-                                    ret.prevHeight = bridgeEndY - bridgeStartY;
+                                    ret.prevHeight = height;
                                 }
 
                                 // Instantiating the tile
@@ -232,7 +236,8 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    if (((x == xStart) && data.mustDrawLeft) || x != xStart || data.prevHeight <= y)
+                    if (((x == xStart) && data.mustDrawLeft) || (x != xStart) || (data.prevHeight <= (y - yStart)) ||
+                        (data.bridgeType.Contains("Little") && (x == (xEnd - 1)) && (y == (yEnd - 1))))
                     {
                         string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
                         string tile = possibleTiles[0];
@@ -242,9 +247,6 @@ public class GameManager : MonoBehaviour
                             int index = UnityEngine.Random.Range(0, possibleTiles.Length);
                             tile = possibleTiles[index];
                         }
-
-                        Debug.Log(tile);
-
                         instantiated = Instantiate((GameObject)Resources.Load(tile), new Vector2(x, y), Quaternion.Euler(Vector2.zero));
                         instantiated.transform.parent = generationParent.transform;
                     }

@@ -36,7 +36,7 @@ public class CliffGenerationData
     public bool CanChangeHeight()
     {
         if (bridgeType.Contains("Brown") ||
-            bridgeType.Contains("/LightBridge/") ||
+            bridgeType.Contains("/LightBridge") ||
             bridgeType.Contains("/DarkBridge"))
         {
             return false;
