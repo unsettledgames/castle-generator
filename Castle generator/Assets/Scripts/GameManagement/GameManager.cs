@@ -93,10 +93,16 @@ public class GameManager : MonoBehaviour
         CliffGenerationData startData = new CliffGenerationData();
         bool mustBuildBridge;
 
-        startData.bridgePositions[0] = new Vector3(-43.1875f, -9.875f, -10);
+        startData.bridgePositions.Add(Camera.main.transform.position);
 
         for (int i=0; i<nCliffs; i++)
         {
+            if (startData.CanChangeHeight())
+            {
+                cliffHeight = UnityEngine.Random.Range(startData.prevHeight == 0 ? minCliffHeight : startData.prevHeight, maxCliffHeight);
+                cliffWidth = UnityEngine.Random.Range(minCliffWidth, maxCliffWidth);
+            }
+            
             if (i != nCliffs - 1)
             {
                 mustBuildBridge = true;
@@ -154,6 +160,12 @@ public class GameManager : MonoBehaviour
                     currentTileset = bridgeTilesets[UnityEngine.Random.Range(0, bridgeTilesets.Length)];
                     prefix = currentTileset.prefix;
 
+                    // If I didn't pick a big bridge, I can make it shorter than the cliff
+                    if (!((prefix.Contains("/LightBridge/")) || prefix.Contains("/DarkBridge/")))
+                    {
+                        bridgeEndY = UnityEngine.Random.Range(bridgeStartY, yEnd);
+                    }
+
                     /* Used for those bridges that have 2 top tiles (one above the other one). Since they're added
                      automatically, I have to stop 1 y unit earlier.*/
                     if ((prefix.Contains("/LightBridge/")) || prefix.Contains("/DarkBridge/"))
@@ -177,15 +189,19 @@ public class GameManager : MonoBehaviour
 
                                 Debug.Log(possibleTiles[0]);
 
-                                /* The bottom right corner of the bridge (+1 on the x coord) is the position of the next 
+                                /* The bottom right corner of the bridge is the position of the next 
                                  * cliff, so I add it to the bridgePositions list */
                                 if (possibleTiles[0].Contains("BottomRight"))
                                 {
-                                    Vector2 toAdd = new Vector2(instantiationPos.x + 1, instantiationPos.y);
+                                    Vector2 toAdd = new Vector2(instantiationPos.x, instantiationPos.y);
                                     Debug.Log("Next position: " + toAdd);
                                     ret.bridgePositions.Add(toAdd);
                                     // Also, since the bridge contains part of the cliff, I don't need to draw that part
                                     ret.mustDrawLeft = false;
+                                    // Saving bridge type
+                                    ret.bridgeType = currentTileset.prefix;
+                                    // Adding current Y
+                                    ret.prevHeight = bridgeEndY - bridgeStartY;
                                 }
 
                                 // Instantiating the tile
@@ -216,22 +232,22 @@ public class GameManager : MonoBehaviour
                 }
                 else
                 {
-                    
-                    string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
-                    string tile = possibleTiles[0];
-
-                    if (possibleTiles.Length != 1)
+                    if (((x == xStart) && data.mustDrawLeft) || x != xStart || data.prevHeight <= y)
                     {
-                        int index = UnityEngine.Random.Range(0, possibleTiles.Length);
+                        string[] possibleTiles = GetPossibleTiles(xStart, xEnd, yStart, yEnd, x, y);
+                        string tile = possibleTiles[0];
 
-                        Debug.Log(index);
-                        tile = possibleTiles[index];
+                        if (possibleTiles.Length != 1)
+                        {
+                            int index = UnityEngine.Random.Range(0, possibleTiles.Length);
+                            tile = possibleTiles[index];
+                        }
+
+                        Debug.Log(tile);
+
+                        instantiated = Instantiate((GameObject)Resources.Load(tile), new Vector2(x, y), Quaternion.Euler(Vector2.zero));
+                        instantiated.transform.parent = generationParent.transform;
                     }
-
-                    Debug.Log(tile);
-
-                    instantiated = Instantiate((GameObject)Resources.Load(tile), new Vector2(x, y), Quaternion.Euler(Vector2.zero));
-                    instantiated.transform.parent = generationParent.transform;
                 }
             }
         }

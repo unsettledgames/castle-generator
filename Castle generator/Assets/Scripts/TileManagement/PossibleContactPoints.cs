@@ -12,6 +12,10 @@ public class CliffGenerationData
     public bool mustDrawRight;
     // Tells whether the left side must be drawn or not
     public bool mustDrawLeft;
+    // Bridge type (some allow different cliff heights, other don't)
+    public string bridgeType;
+    // Previous y (used to compensate different cliff heights)
+    public int prevHeight;
 
 
     public CliffGenerationData()
@@ -19,5 +23,25 @@ public class CliffGenerationData
         // Initializing contact points
         bridgePositions = new List<Vector3>();
         bastionPositions = new List<Vector3>();
+
+        // Setting draw mode
+        mustDrawRight = true;
+        mustDrawLeft = true;
+
+        // No bridge at the beginning
+        bridgeType = "None";
+        prevHeight = 0;
+    }
+
+    public bool CanChangeHeight()
+    {
+        if (bridgeType.Contains("Brown") ||
+            bridgeType.Contains("/LightBridge/") ||
+            bridgeType.Contains("/DarkBridge"))
+        {
+            return false;
+        }
+
+        return true;
     }
 }
