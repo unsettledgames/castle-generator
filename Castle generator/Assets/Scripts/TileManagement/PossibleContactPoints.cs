@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PossibleContactPoints
+public class CliffGenerationData
 {
     // Possible positions to which it is possible to attach bridges
     public List<Vector3> bridgePositions { get; set; }
@@ -14,7 +14,7 @@ public class PossibleContactPoints
     public bool mustDrawLeft;
 
 
-    public PossibleContactPoints()
+    public CliffGenerationData()
     {
         // Initializing contact points
         bridgePositions = new List<Vector3>();

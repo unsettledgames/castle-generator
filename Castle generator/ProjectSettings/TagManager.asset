@@ -9,6 +9,8 @@ TagManager:
   - MinCliffWidth
   - MaxCliffWidth
   - NCliffs
+  - MinBridgeWidth
+  - MaxBridgeWidth
   layers:
   - Default
   - TransparentFX
