@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1237117369978588547}
   - component: {fileID: 1237117369978588546}
+  - component: {fileID: -2787980463569135650}
   m_Layer: 0
   m_Name: SingleMediumTowerMiddle1
   m_TagString: Untagged
@@ -68,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_Sprite: {fileID: 293392773991598977, guid: 01cf35ce8b26caa4baccc866f276ac8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -80,3 +81,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-2787980463569135650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1237117369978588557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3242782660540d4b9fce9fbf695e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Bastion1/Tower/
+  tile:
+  - SingleMediumTowerTop
+  - SingleMediumTowerTop0
+  direction: Top
+  instantiateIfLast: 1
+  isLast: 0

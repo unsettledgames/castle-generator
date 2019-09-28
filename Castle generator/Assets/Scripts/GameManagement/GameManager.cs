@@ -12,21 +12,36 @@ public class GameManager : MonoBehaviour
     public int maxCliffHeight;
     public int minCliffWidth;
     public int maxCliffWidth;
+    public int nCliffs;
 
     [Header("Bridges data")]
     public int minBridgeWidth;
     public int maxBridgeWidth;
 
-    public int nCliffs;
+    [Header("Bastions data")]
+    public int minBastionWidth;
+    public int maxBastionWidth;
+    public int minBastionHeight;
+    public int maxBastionHeight;
+    
 
-    [Header("Tilesets labels")]
+    [Header("Cliff and bridges tilesets")]
     public Tileset cliffTileSet;
     public Tileset[] bridgeTilesets;
 
+    [Header("Wall tileset")]
+    public Tileset wallTileset;
+
+    [Header("Bastion tilesets")]
+    public BastionTileset[] bastionTilesets;
+
+    [Header("Other")]
     public GameObject generationParent;
 
     // The tileset I'm currently using
     private Tileset currentTileset;
+    // The bastion tileset I'm currently using
+    private BastionTileset currentBastionTileset;
 
     public void CheckData()
     {
@@ -47,6 +62,12 @@ public class GameManager : MonoBehaviour
         string minBw = GameObject.FindGameObjectWithTag("MinBridgeWidth").GetComponent<InputField>().text;
         string maxBw = GameObject.FindGameObjectWithTag("MaxBridgeWidth").GetComponent<InputField>().text;
 
+        // Bastions
+        string minBah = GameObject.FindGameObjectWithTag("MinBastionHeight").GetComponent<InputField>().text;
+        string maxBah = GameObject.FindGameObjectWithTag("MaxBastionHeight").GetComponent<InputField>().text;
+        string minBaw = GameObject.FindGameObjectWithTag("MinBastionWidth").GetComponent<InputField>().text;
+        string maxBaw = GameObject.FindGameObjectWithTag("MaxBastionWidth").GetComponent<InputField>().text;
+
         // Checking if they're correct
         try
         {
@@ -57,6 +78,11 @@ public class GameManager : MonoBehaviour
 
             minBridgeWidth = int.Parse(minBw);
             maxBridgeWidth = int.Parse(maxBw);
+
+            minBastionHeight = int.Parse(minBah);
+            maxBastionHeight = int.Parse(maxBah);
+            minBastionWidth = int.Parse(minBaw);
+            maxBastionWidth = int.Parse(maxBaw);
 
             try
             {
@@ -118,14 +144,102 @@ public class GameManager : MonoBehaviour
                 mustBuildBridge = false;
             }
 
-            Debug.Log("Altezza di prima: " + startData.prevHeight);
             startData = GenerateCliff(startData, cliffHeight, cliffWidth, mustBuildBridge);
+            GenerateWall(startData, cliffWidth);
+        }
+    }
+
+    private void GenerateWall(CliffGenerationData data, int width)
+    {
+        // Setting the tileset
+        currentTileset = wallTileset;
+        // Getting start position
+        Vector2 startPos = data.wallsPositions[0];
+        // Converting it to int
+        int startX = (int)startPos.x;
+        int startY = (int)startPos.y;
+        int endX = startX + width;
+
+        // There's already grass on the cliff
+        startPos = new Vector2(startX, startY);
+
+        for (int x = startX; x < endX; x++)
+        {
+            string[] possibleTiles = GetPossibleTiles(startX, endX, startY, startY + 1, x, startY);
+            string toInstantiate = "";
+
+            // Left or right tile
+            if ((startX == x) || (x == (endX - 1)))
+            {
+                toInstantiate = possibleTiles[UnityEngine.Random.Range(0, possibleTiles.Length)];
+            }
+            else
+            {
+                Debug.Log("Wall size: " + possibleTiles.Length);
+                // Walls are divided in 2 parts: light and dark tiles
+                if ((x - startX) < ((endX - startX) / 2))
+                {
+                    // Instantiate light tiles
+                    toInstantiate = possibleTiles[UnityEngine.Random.Range(2, possibleTiles.Length)];
+                }
+                else
+                {
+                    // Instantiate dark tiles
+                    toInstantiate = possibleTiles[UnityEngine.Random.Range(0, 2)];
+                }
+            }
+
+            Debug.Log(toInstantiate);
+
+            // Actually instantiating the tile
+            GameObject instantiated = Instantiate(
+                (GameObject)Resources.Load(toInstantiate),
+                new Vector2(x, startY),
+                Quaternion.Euler(Vector3.zero)
+                );
+            instantiated.transform.parent = generationParent.transform;
+        }
+
+        // Generating a bastion behind the wall 
+        GenerateBastion(data, width);
+    }
+
+    private void GenerateBastion(CliffGenerationData data, int maxWidth)
+    {
+        int width = UnityEngine.Random.Range(minBastionWidth, (maxWidth > maxBastionWidth) ? maxBastionWidth : maxWidth);
+        int height = UnityEngine.Random.Range(minBastionHeight, maxBastionHeight);
+        Vector3 startPos = data.wallsPositions[0];
+
+        int xStart = (int)startPos.x + 1;
+        int yStart = (int)startPos.y;
+        int yEnd = yStart + height;
+        int xEnd = xStart + width - 1;
+
+        currentBastionTileset = bastionTilesets[UnityEngine.Random.Range(0, bastionTilesets.Length)];
+
+        Debug.Log("Tileset: " + currentBastionTileset);
+
+        for (int x=xStart; x<xEnd; x++)
+        {
+            for (int y = yStart; y < yEnd; y++)
+            {
+                string[] possibleTiles = GetPossibleBastionTiles(xStart, xEnd, yStart, yEnd, x, y);
+                string toInstantiate = possibleTiles[UnityEngine.Random.Range(0, possibleTiles.Length)];
+
+                Debug.Log(toInstantiate);
+
+                GameObject instantiated = Instantiate(
+                    (GameObject)Resources.Load(toInstantiate),
+                    new Vector3(x, y),
+                    Quaternion.Euler(Vector3.zero)
+                );
+                instantiated.transform.parent = generationParent.transform;
+            }
         }
     }
 
     private CliffGenerationData GenerateCliff(CliffGenerationData data, int height, int width, bool mustBuildBridge)
     {
-        Debug.Log("Dimensione: " + data.bridgePositions.Count);
         Vector3 start = data.bridgePositions[0];
         CliffGenerationData ret = new CliffGenerationData();
 
@@ -245,6 +359,13 @@ public class GameManager : MonoBehaviour
                             int index = UnityEngine.Random.Range(0, possibleTiles.Length);
                             tile = possibleTiles[index];
                         }
+
+                        // If this is the top right corner, I have to build a wall starting from it
+                        if (tile.Contains("TopLeft"))
+                        {
+                            ret.wallsPositions.Add(new Vector2(x, y));
+                        }
+
                         instantiated = Instantiate((GameObject)Resources.Load(tile), new Vector2(x, y), Quaternion.Euler(Vector2.zero));
                         instantiated.transform.parent = generationParent.transform;
                     }
@@ -256,6 +377,130 @@ public class GameManager : MonoBehaviour
     }
 
     /** Returns the right tile depending on the rect coordinates and tiles relative position
+     * 
+     *  xStart:  x coordinate of the bottom left corner of the rect to generate
+     *  xEnd:    x coordinate of the top right corner of the rect to generate
+     *  yStart:  y coordinate of the bottom left corner of the rect to generate
+     *  xEnd:    y coordinate of the top right corner of the rect to generate
+     *  
+     *  return: an array of string containing the resource paths of the possible tiles 
+     */
+    private string[] GetPossibleBastionTiles(int xStart, int xEnd, int yStart, int yEnd, int x, int y)
+    {
+        // Left tiles
+        if (x == xStart)
+        {
+            // Bottom left tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomLeftLight();
+            }
+            // Top left tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopLeftLight();
+            }
+            // Middle left tile
+            else
+            {
+                return currentBastionTileset.GetMiddleLeftLight();
+            }
+        }
+        // Right light tiles
+        else if (x == (xStart + ((xEnd - xStart) / 2)))
+        {
+            // Bottom right tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomRightLight();
+            }
+            // Top right tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopRightLight();
+            }
+            else
+            {
+                return currentBastionTileset.GetMiddleRightLight();
+            }
+        }
+        // Middle tiles
+        else if (x < (xStart + ((xEnd - xStart) / 2)))
+        {
+            // Bottom middle tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomMiddleLight();
+            }
+            // Top middle tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopMiddleLight();
+            }
+            // Middle middle tile
+            else
+            {
+                return currentBastionTileset.GetMiddleMiddleLight();
+            }
+        }
+        else if (x == (xStart + ((xEnd - xStart) / 2 + 1)))
+        {
+            // Bottom left tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomLeftDark();
+            }
+            // Top left tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopLeftDark();
+            }
+            // Middle left tile
+            else
+            {
+                return currentBastionTileset.GetMiddleLeftDark();
+            }
+        }
+        // Right dark tiles
+        else if (x == (xEnd - 1))
+        {
+            // Bottom right tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomRightDark();
+            }
+            // Top right tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopRightDark();
+            }
+            else
+            {
+                return currentBastionTileset.GetMiddleRightDark();
+            }
+        }
+        // Middle tiles
+        else
+        {
+            // Bottom middle tile
+            if (y == yStart)
+            {
+                return currentBastionTileset.GetBottomMiddleDark();
+            }
+            // Top middle tile
+            else if (y == (yEnd - 1))
+            {
+                return currentBastionTileset.GetTopMiddleDark();
+            }
+            // Middle middle tile
+            else
+            {
+                return currentBastionTileset.GetMiddleMiddleDark();
+            }
+        }
+    }
+
+    /** Returns the right bastion tile depending on the rect coordinates and tiles relative position
      * 
      *  xStart:  x coordinate of the bottom left corner of the rect to generate
      *  xEnd:    x coordinate of the top right corner of the rect to generate

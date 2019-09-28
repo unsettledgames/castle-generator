@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1689844414413218925}
   - component: {fileID: 1689844414413218926}
+  - component: {fileID: 738547595}
   m_Layer: 0
   m_Name: Bastion0TopMiddleLight0
   m_TagString: Untagged
@@ -68,7 +69,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: -6985117363303071740, guid: 01cf35ce8b26caa4baccc866f276ac8a,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -81,3 +82,24 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &738547595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689844414413218927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64057e0a4c3084748a6c17689c7b3091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minYOffset: -2
+  maxYOffset: 1
+  minXOffset: -0.5
+  maxXOffset: 0.5
+  minLength: 1
+  maxLength: 2
+  nextTiles:
+  - Bastion0/Tower/SingleThinTowerTop
+  towerProbability: 100

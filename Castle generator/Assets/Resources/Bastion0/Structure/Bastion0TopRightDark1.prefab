@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9160615163551369835}
   - component: {fileID: 9160615163551369834}
+  - component: {fileID: 401138258950388286}
+  - component: {fileID: 1747621924}
   m_Layer: 0
   m_Name: Bastion0TopRightDark1
   m_TagString: Untagged
@@ -68,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: -3642208251427772964, guid: 01cf35ce8b26caa4baccc866f276ac8a,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -81,3 +83,42 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &401138258950388286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9160615163551369833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3242782660540d4b9fce9fbf695e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Bastion0/Roofs/
+  tile:
+  - RoofRight
+  direction: top
+  instantiateIfLast: 0
+  isLast: 0
+--- !u!114 &1747621924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9160615163551369833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64057e0a4c3084748a6c17689c7b3091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minYOffset: -2
+  maxYOffset: 1
+  minXOffset: -0.2
+  maxXOffset: 0.2
+  minLength: 1
+  maxLength: 2
+  nextTiles:
+  - Bastion0/Tower/SingleThinTowerTop
+  towerProbability: 100

@@ -11,6 +11,10 @@ TagManager:
   - NCliffs
   - MinBridgeWidth
   - MaxBridgeWidth
+  - MinBastionHeight
+  - MaxBastionHeight
+  - MinBastionWidth
+  - MaxBastionWidth
   layers:
   - Default
   - TransparentFX
