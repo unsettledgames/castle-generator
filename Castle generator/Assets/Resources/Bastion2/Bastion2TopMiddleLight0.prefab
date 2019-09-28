@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6357864892613819115}
   - component: {fileID: 6357864892613819114}
+  - component: {fileID: 8595405515228417387}
+  - component: {fileID: 5254314941075458143}
   m_Layer: 0
   m_Name: Bastion2TopMiddleLight0
   m_TagString: Untagged
@@ -68,7 +70,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: -4605163527387846987, guid: 01cf35ce8b26caa4baccc866f276ac8a,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -81,3 +83,49 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8595405515228417387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357864892613819113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 668c563249adcce4ea3c9aebed1a596d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextRight:
+  - BigTower/BigTowerRight
+  - BigTower/BigTowerMiddleRight
+  nextLeft:
+  - BigTower/BigTowerLeft
+  - BigTower/BigTowerMiddleLeft
+  minLength: 2
+  maxLength: 3
+  minXNoise: -0.2
+  maxXNoise: 0.2
+  minYNoise: -1.5
+  maxYNoise: 0.5
+  towerProbability: 20
+--- !u!114 &5254314941075458143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6357864892613819113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64057e0a4c3084748a6c17689c7b3091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minYOffset: -1.5
+  maxYOffset: 0.5
+  minXOffset: -0.2
+  maxXOffset: 0.2
+  minLength: 2
+  maxLength: 4
+  nextTiles:
+  - BridgesArcs/MidTower/MidTowerMiddle0
+  towerProbability: 40
