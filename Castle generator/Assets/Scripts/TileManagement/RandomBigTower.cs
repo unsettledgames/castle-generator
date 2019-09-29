@@ -23,9 +23,7 @@ public class RandomBigTower : MonoBehaviour
         {
             Vector3 pos = transform.position + new Vector3(Random.Range(minXNoise, maxXNoise), Random.Range(minYNoise, maxYNoise));
             int index = Random.Range(0, nextRight.Length);
-            int length = Random.Range(minLength, maxLength);
-
-            Debug.Log(nextRight[index]);
+            int length = Random.Range(GameManager.minTowerLength, GameManager.maxTowerLength);
 
             for (int i = 0; i < length; i++)
             {

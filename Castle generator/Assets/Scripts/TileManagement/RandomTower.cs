@@ -25,7 +25,7 @@ public class RandomTower : MonoBehaviour
         {
             string tile = nextTiles[Random.Range(0, nextTiles.Length)];
             Vector3 pos = transform.position + new Vector3(Random.Range(minXOffset, maxXOffset), Random.Range(minYOffset, maxYOffset));
-            int nPieces = Random.Range(minLength, maxLength);
+            int nPieces = Random.Range(GameManager.minTowerLength, GameManager.maxTowerLength);
 
             for (int i = 0; i < nPieces; i++)
             {

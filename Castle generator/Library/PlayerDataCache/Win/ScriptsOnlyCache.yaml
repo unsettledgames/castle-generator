@@ -19,7 +19,6 @@ ScriptsOnlyBuild:
     - UnityEngine.Experimental.Rendering.LWRP.PixelPerfectCamera
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
-    - UnityEditor.TestTools.TestRunner.TestListCacheData
     UnityEngine.UI.dll:
     - UnityEngine.EventSystems.EventSystem
     - UnityEngine.EventSystems.StandaloneInputModule
@@ -57,33 +56,33 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 10200}
     - Class: 114
-      Script: {instanceID: 10346}
+      Script: {instanceID: 10274}
     - Class: 114
-      Script: {instanceID: 10906}
+      Script: {instanceID: 10348}
     - Class: 114
-      Script: {instanceID: 11618}
+      Script: {instanceID: 10908}
     - Class: 114
-      Script: {instanceID: 11856}
+      Script: {instanceID: 11620}
     - Class: 114
-      Script: {instanceID: 11924}
+      Script: {instanceID: 11858}
     - Class: 114
       Script: {instanceID: 11926}
     - Class: 114
-      Script: {instanceID: 12098}
+      Script: {instanceID: 11928}
     - Class: 114
-      Script: {instanceID: 12174}
+      Script: {instanceID: 12100}
     - Class: 114
-      Script: {instanceID: 12398}
+      Script: {instanceID: 12176}
     - Class: 114
-      Script: {instanceID: 12956}
+      Script: {instanceID: 12400}
     - Class: 114
-      Script: {instanceID: 13054}
+      Script: {instanceID: 12958}
     - Class: 114
-      Script: {instanceID: 13106}
+      Script: {instanceID: 13056}
     - Class: 114
-      Script: {instanceID: 13152}
+      Script: {instanceID: 13108}
     - Class: 114
-      Script: {instanceID: 31786}
+      Script: {instanceID: 13154}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -245,6 +244,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_InputField
+  - hash:
+      serializedVersion: 2
+      Hash: 659a5b770f2b0e96ac9f928e6498d86b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: RandomBigTower
   - hash:
       serializedVersion: 2
       Hash: 7ab0e790220bdca831fdd886b339039d
@@ -761,12 +766,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 659a5b770f2b0e96ac9f928e6498d86b
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: RandomBigTower
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity

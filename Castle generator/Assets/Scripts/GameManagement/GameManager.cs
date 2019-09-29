@@ -29,6 +29,10 @@ public class GameManager : MonoBehaviour
     public Tileset cliffTileSet;
     public Tileset[] bridgeTilesets;
 
+    [Header("Towers data")]
+    public static int minTowerLength;
+    public static int maxTowerLength;
+
     [Header("Wall tileset")]
     public Tileset wallTileset;
 
@@ -37,6 +41,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Other")]
     public GameObject generationParent;
+
 
     // The tileset I'm currently using
     private Tileset currentTileset;
@@ -68,6 +73,9 @@ public class GameManager : MonoBehaviour
         string minBaw = GameObject.FindGameObjectWithTag("MinBastionWidth").GetComponent<InputField>().text;
         string maxBaw = GameObject.FindGameObjectWithTag("MaxBastionWidth").GetComponent<InputField>().text;
 
+        string minTl = GameObject.FindGameObjectWithTag("MinTowerLength").GetComponent<InputField>().text;
+        string maxTl = GameObject.FindGameObjectWithTag("MaxTowerLength").GetComponent<InputField>().text;
+
         // Checking if they're correct
         try
         {
@@ -83,6 +91,9 @@ public class GameManager : MonoBehaviour
             maxBastionHeight = int.Parse(maxBah);
             minBastionWidth = int.Parse(minBaw);
             maxBastionWidth = int.Parse(maxBaw);
+
+            minTowerLength = int.Parse(minTl);
+            maxTowerLength = int.Parse(maxTl);
 
             try
             {
@@ -119,7 +130,7 @@ public class GameManager : MonoBehaviour
         CliffGenerationData startData = new CliffGenerationData();
         bool mustBuildBridge;
 
-        startData.bridgePositions.Add(Camera.main.transform.position);
+        startData.bridgePositions.Add(new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y - 6));
 
         for (int i=0; i<nCliffs; i++)
         {
@@ -175,7 +186,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("Wall size: " + possibleTiles.Length);
                 // Walls are divided in 2 parts: light and dark tiles
                 if ((x - startX) < ((endX - startX) / 2))
                 {
@@ -189,8 +199,6 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            Debug.Log(toInstantiate);
-
             // Actually instantiating the tile
             GameObject instantiated = Instantiate(
                 (GameObject)Resources.Load(toInstantiate),
@@ -201,32 +209,33 @@ public class GameManager : MonoBehaviour
         }
 
         // Generating a bastion behind the wall 
-        GenerateBastion(data, width);
+        GenerateBastion(data, width, startX, endX);
     }
 
-    private void GenerateBastion(CliffGenerationData data, int maxWidth)
+    private void GenerateBastion(CliffGenerationData data, int maxWidth, int cliffStart, int cliffEnd)
     {
-        int width = UnityEngine.Random.Range(minBastionWidth, (maxWidth > maxBastionWidth) ? maxBastionWidth : maxWidth);
-        int height = UnityEngine.Random.Range(minBastionHeight, maxBastionHeight);
         Vector3 startPos = data.wallsPositions[0];
 
         int xStart = (int)startPos.x + 1;
         int yStart = (int)startPos.y;
+
+        int width = UnityEngine.Random.Range(minBastionWidth, ((cliffEnd - xStart) > maxBastionWidth) ? maxBastionWidth : (cliffEnd - xStart));
+        int height = UnityEngine.Random.Range(minBastionHeight, maxBastionHeight);
+
         int yEnd = yStart + height;
         int xEnd = xStart + width - 1;
 
         currentBastionTileset = bastionTilesets[UnityEngine.Random.Range(0, bastionTilesets.Length)];
 
-        Debug.Log("Tileset: " + currentBastionTileset);
+        Debug.Log("Width: " + width + ", startx: " + xStart + ", endx: " + xEnd);
 
         for (int x=xStart; x<xEnd; x++)
         {
+            Debug.Log("Ci sono");
             for (int y = yStart; y < yEnd; y++)
             {
                 string[] possibleTiles = GetPossibleBastionTiles(xStart, xEnd, yStart, yEnd, x, y);
                 string toInstantiate = possibleTiles[UnityEngine.Random.Range(0, possibleTiles.Length)];
-
-                Debug.Log(toInstantiate);
 
                 GameObject instantiated = Instantiate(
                     (GameObject)Resources.Load(toInstantiate),
@@ -236,6 +245,16 @@ public class GameManager : MonoBehaviour
                 instantiated.transform.parent = generationParent.transform;
             }
         }
+        
+        if ((xStart + width) <= (cliffStart + (cliffEnd - cliffStart) / 1.4f) && ((xEnd + 8) != cliffEnd))
+        {
+            Debug.Log("Ue");
+            float newStartX = UnityEngine.Random.Range(data.wallsPositions[0].x + (width - width / 3.5f), data.wallsPositions[0].x + width);
+            data.wallsPositions[0] = new Vector3(newStartX, data.wallsPositions[0].y);
+
+            GenerateBastion(data, maxWidth, cliffStart, cliffEnd);
+        }
+        
     }
 
     private CliffGenerationData GenerateCliff(CliffGenerationData data, int height, int width, bool mustBuildBridge)

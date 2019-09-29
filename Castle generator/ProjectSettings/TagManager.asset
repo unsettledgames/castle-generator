@@ -15,6 +15,9 @@ TagManager:
   - MaxBastionHeight
   - MinBastionWidth
   - MaxBastionWidth
+  - MinTowerLength
+  - MaxTowerLength
+  - DayCycleSpeed
   layers:
   - Default
   - TransparentFX
