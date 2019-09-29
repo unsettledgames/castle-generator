@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7429552674826954478}
   - component: {fileID: 7429552674826954473}
+  - component: {fileID: -7662564487858769929}
+  - component: {fileID: -2180136285452266398}
+  - component: {fileID: 6447442173078967083}
   m_Layer: 0
   m_Name: RockBottomMiddle
   m_TagString: Untagged
@@ -81,3 +84,60 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-7662564487858769929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429552674826954472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3242782660540d4b9fce9fbf695e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Generics/
+  tile:
+  - Temple
+  direction: middle
+  instantiateIfLast: 0
+  isLast: 0
+  probability: 30
+--- !u!114 &-2180136285452266398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429552674826954472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3242782660540d4b9fce9fbf695e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Generics/
+  tile:
+  - Cemetery
+  direction: middle
+  instantiateIfLast: 0
+  isLast: 0
+  probability: 30
+--- !u!114 &6447442173078967083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7429552674826954472}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3242782660540d4b9fce9fbf695e2e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Generics/
+  tile:
+  - ChurchBottom
+  direction: middle
+  instantiateIfLast: 0
+  isLast: 0
+  probability: 30

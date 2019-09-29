@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     public int maxCliffWidth;
     public int nCliffs;
 
+    public int grassHeight;
+    public GameObject grassMiddle;
+    public GameObject flowers;
+    public GameObject grassIrregularities;
+
     [Header("Bridges data")]
     public int minBridgeWidth;
     public int maxBridgeWidth;
@@ -257,6 +262,51 @@ public class GameManager : MonoBehaviour
         
     }
 
+    private void GenerateGrass(int xStart, int yEnd, int xEnd)
+    {
+        for (int x=xStart; x<xEnd; x++)
+        {
+            for (int y = yEnd - grassHeight; y<yEnd; y++)
+            {
+                if (y == (-yEnd - 1) && UnityEngine.Random.Range(0, 100) < 50)
+                {
+                    // TODO: instantiate irregularities
+                    GameObject tmp = Instantiate(
+                        grassIrregularities,
+                        new Vector3(x, y + 1),
+                        Quaternion.Euler(Vector3.zero));
+                    tmp.transform.parent = generationParent.transform;
+                }
+
+                if (UnityEngine.Random.Range(0, 100) < 50)
+                {
+                    bool flipX = UnityEngine.Random.Range(0, 100) < 50 ? true : false;
+                    bool flipY = UnityEngine.Random.Range(0, 100) < 50 ? true : false;
+                    SpriteRenderer sr;
+
+                    GameObject tmp = Instantiate(
+                        flowers,
+                        new Vector3(x, y),
+                        Quaternion.Euler(Vector3.zero));
+                    tmp.transform.parent = generationParent.transform;
+
+                    sr = tmp.GetComponent<SpriteRenderer>();
+                    sr.flipX = flipX;
+                    sr.flipY = flipY;
+                }
+
+                GameObject instantiated = Instantiate(
+                    grassMiddle,
+                    new Vector3(x, y),
+                    Quaternion.Euler(Vector3.zero)
+                );
+                instantiated.transform.parent = generationParent.transform;
+                instantiated.SetActive(false);
+                instantiated.SetActive(true);
+            }
+        }
+    }
+
     private CliffGenerationData GenerateCliff(CliffGenerationData data, int height, int width, bool mustBuildBridge)
     {
         Vector3 start = data.bridgePositions[0];
@@ -271,6 +321,8 @@ public class GameManager : MonoBehaviour
         // Calculating end position
         int xEnd = xStart + width;
         int yEnd = yStart + height;
+
+        GenerateGrass(xStart, yStart, xEnd);
 
         // I'm drawing a rectangle of tiles
         for (int x=xStart; x<xEnd ; x++)
@@ -293,6 +345,9 @@ public class GameManager : MonoBehaviour
                     int bridgeStartY = yStart;
                     int bridgeEndY = yEnd;
                     string prefix;
+
+                    // Generate grass under the bridge
+                    GenerateGrass(bridgeStartX, bridgeStartY, bridgeEndX);
 
                     // Choosing a random bridge tileset
                     currentTileset = bridgeTilesets[UnityEngine.Random.Range(0, bridgeTilesets.Length)];

@@ -43,6 +43,7 @@ public class RandomBigTower : MonoBehaviour
                     pos + new Vector3(1, i),
                     Quaternion.Euler(Vector3.zero)
                 );
+                tmp.transform.parent = transform;
 
                 if (i == (length - 1))
                 {

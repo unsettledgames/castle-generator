@@ -16,7 +16,7 @@ public class TimeDestroyer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GetComponent<SpriteRenderer>().isVisible)
+        if (!GetComponent<SpriteRenderer>().isVisible && Time.time >= plannedDestructionTime)
         {
             Destroy(this.gameObject);
         }

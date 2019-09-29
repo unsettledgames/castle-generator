@@ -3,12 +3,17 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - BastionTileset
     - CameraManager
+    - CloudGenerator
+    - CloudManager
+    - DayNightCycle
     - GameManager
     - InstantiateTileOnAwake
     - RandomBigTower
     - RandomTower
     - SliderToText
     - Tileset
+    - TimeDestroyer
+    - UIHider
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
     - UnityEditor.Tilemaps.GridPaletteBrushes
@@ -16,7 +21,11 @@ ScriptsOnlyBuild:
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.TileDragAndDropManager
     Unity.RenderPipelines.Lightweight.Runtime.dll:
+    - UnityEngine.Experimental.Rendering.LWRP.Light2D
     - UnityEngine.Experimental.Rendering.LWRP.PixelPerfectCamera
+    - UnityEngine.Experimental.Rendering.LWRP.Renderer2DData
+    - UnityEngine.Rendering.LWRP.LightweightRenderPipelineAsset
+    - UnityEngine.Rendering.LWRP.LightweightRenderPipelineEditorResources
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -44,46 +53,62 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 50
+      Script: {instanceID: 0}
+    - Class: 61
+      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 9806}
+      Script: {instanceID: 9808}
     - Class: 114
-      Script: {instanceID: 10110}
+      Script: {instanceID: 10112}
     - Class: 114
-      Script: {instanceID: 10118}
+      Script: {instanceID: 10120}
     - Class: 114
-      Script: {instanceID: 10200}
+      Script: {instanceID: 10202}
     - Class: 114
-      Script: {instanceID: 10274}
+      Script: {instanceID: 10220}
     - Class: 114
-      Script: {instanceID: 10348}
+      Script: {instanceID: 10278}
     - Class: 114
-      Script: {instanceID: 10908}
+      Script: {instanceID: 10352}
     - Class: 114
-      Script: {instanceID: 11620}
+      Script: {instanceID: 10474}
     - Class: 114
-      Script: {instanceID: 11858}
+      Script: {instanceID: 10914}
     - Class: 114
-      Script: {instanceID: 11926}
+      Script: {instanceID: 11386}
     - Class: 114
-      Script: {instanceID: 11928}
+      Script: {instanceID: 11628}
     - Class: 114
-      Script: {instanceID: 12100}
+      Script: {instanceID: 11790}
     - Class: 114
-      Script: {instanceID: 12176}
+      Script: {instanceID: 11868}
     - Class: 114
-      Script: {instanceID: 12400}
+      Script: {instanceID: 11936}
     - Class: 114
-      Script: {instanceID: 12958}
+      Script: {instanceID: 11938}
     - Class: 114
-      Script: {instanceID: 13056}
+      Script: {instanceID: 12110}
     - Class: 114
-      Script: {instanceID: 13108}
+      Script: {instanceID: 12186}
     - Class: 114
-      Script: {instanceID: 13154}
+      Script: {instanceID: 12410}
+    - Class: 114
+      Script: {instanceID: 12928}
+    - Class: 114
+      Script: {instanceID: 12970}
+    - Class: 114
+      Script: {instanceID: 13068}
+    - Class: 114
+      Script: {instanceID: 13120}
+    - Class: 114
+      Script: {instanceID: 13140}
+    - Class: 114
+      Script: {instanceID: 13166}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -229,6 +254,12 @@ ScriptsOnlyBuild:
     className: Image
   - hash:
       serializedVersion: 2
+      Hash: d0adc65b6f54d204e5a5dc174eb9a803
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: UIHider
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
@@ -265,7 +296,7 @@ ScriptsOnlyBuild:
     className: ScreenSpaceReflections
   - hash:
       serializedVersion: 2
-      Hash: 6d982f4766209f66478b7144998eac4c
+      Hash: ae9325c172e8e34fa913deeb127d34ae
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InstantiateTileOnAwake
@@ -305,6 +336,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Postprocessing.Runtime.dll
     namespaceName: UnityEngine.Rendering.PostProcessing
     className: Vignette
+  - hash:
+      serializedVersion: 2
+      Hash: ce13eeb54e28c1cb77f330f9695ee7c7
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: DayNightCycle
   - hash:
       serializedVersion: 2
       Hash: bd3cf68c8964d3c66d1c43f4f98508c9
@@ -439,6 +476,12 @@ ScriptsOnlyBuild:
     className: SignalTrack
   - hash:
       serializedVersion: 2
+      Hash: 7a407d72178b150ee8a507a4f0a2bca4
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CloudGenerator
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -509,6 +552,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: VerticalLayoutGroup
+  - hash:
+      serializedVersion: 2
+      Hash: 79f1e4d923cfc803b34c05ae2cb73dac
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: TimeDestroyer
   - hash:
       serializedVersion: 2
       Hash: 628db7ff32a0c503f0f72bb65b4f8714
@@ -667,6 +716,12 @@ ScriptsOnlyBuild:
     className: TMP_ColorGradient
   - hash:
       serializedVersion: 2
+      Hash: 7a808be41835ff4fa0722510a2096554
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CloudManager
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
@@ -757,7 +812,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 3c714a00b92e20ea73498522aa07b0a6
+      Hash: 8cfe75a2aa10d6461b41caa1256f66cc
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager

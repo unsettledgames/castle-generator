@@ -9,14 +9,43 @@ public class InstantiateTileOnAwake : MonoBehaviour
     public string direction;
     public bool instantiateIfLast = false;
     public bool isLast = false;
+    public float probability = 100;
 
     private Vector3 instantiationPos;
     private string toInstantiate;
+    private bool called = false;
     // Start is called before the first frame update
     void Awake()
     {
+        if (name.Contains("Grass"))
+        {
+            Debug.Log("UOOOOO");
+        }
+        
+        Init();   
+    }
+
+    private void Start()
+    {
+        if (!called)
+        {
+            Init();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (!called)
+        {
+            Init();
+        }
+    }
+
+    public void Init()
+    {
         toInstantiate = path + tile[Random.Range(0, tile.Length)];
         direction = direction.ToLower();
+        called = true;
 
         switch (direction)
         {
@@ -33,11 +62,11 @@ public class InstantiateTileOnAwake : MonoBehaviour
                 instantiationPos = new Vector3(transform.position.x + 1, transform.position.y);
                 break;
             default:
-                instantiationPos = Vector3.zero;
+                instantiationPos = transform.position;
                 break;
         }
 
-        if (!instantiateIfLast)
+        if (!instantiateIfLast && Random.Range(0, 100) <= probability)
         {
             Instantiate();
         }
